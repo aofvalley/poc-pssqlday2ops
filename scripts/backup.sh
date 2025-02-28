@@ -12,14 +12,16 @@ PGPASSWORD=$PG_PASSWORD pg_dump -h ${PG_HOST_PROD}.postgres.database.azure.com -
 
 echo "Backup completed successfully."
 
-# Upload to Azure Storage
+# Upload to Azure Storage with retry mechanism
 echo "Uploading backup to Azure Storage..."
-az storage blob upload \
-  --account-name ${AZURE_STORAGE_ACCOUNT} \
-  --container-name ${AZURE_STORAGE_CONTAINER} \
-  --name ${BACKUP_FILE} \
-  --file /tmp/db_backup.dump \
-  --auth-mode login
+for i in {1..5}; do
+  az storage blob upload \
+    --account-name ${AZURE_STORAGE_ACCOUNT} \
+    --container-name ${AZURE_STORAGE_CONTAINER} \
+    --name ${BACKUP_FILE} \
+    --file /tmp/db_backup.dump \
+    --auth-mode login && break || sleep 15
+done
 
 echo "Backup uploaded successfully to ${AZURE_STORAGE_ACCOUNT}/${AZURE_STORAGE_CONTAINER}/${BACKUP_FILE}"
 
