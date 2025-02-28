@@ -1,39 +1,49 @@
 name: PostgreSQL Backup and Restore
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  workflow_dispatch:  # For manual activation
+  schedule:
+    - cron: '0 2 * * *'  # Runs daily at 2 AM UTC
 
 jobs:
-  backup:
+  backup-restore:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up environment
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        
+      - name: Install PostgreSQL client tools
         run: |
-          echo "DATABASE_NAME=test01" >> $GITHUB_ENV
-          echo "SOURCE_SERVER=prodpssql01" >> $GITHUB_ENV
-          echo "DEST_SERVER=devpssql01" >> $GITHUB_ENV
-          echo "STORAGE_ACCOUNT=pssqlstorage" >> $GITHUB_ENV
-          echo "BACKUP_FILE=backup.sql"
-
-      - name: Backup PostgreSQL database
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+          
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Set environment variables
+        run: |
+          echo "PG_HOST_PROD=${{ secrets.PG_HOST_PROD }}" >> $GITHUB_ENV
+          echo "PG_HOST_DEV=${{ secrets.PG_HOST_DEV }}" >> $GITHUB_ENV
+          echo "PG_DATABASE=${{ secrets.PG_DATABASE }}" >> $GITHUB_ENV
+          echo "PG_USER=${{ secrets.PG_USER }}" >> $GITHUB_ENV
+          echo "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" >> $GITHUB_ENV
+          echo "AZURE_STORAGE_ACCOUNT=${{ secrets.AZURE_STORAGE_ACCOUNT }}" >> $GITHUB_ENV
+          echo "AZURE_STORAGE_CONTAINER=${{ secrets.AZURE_STORAGE_CONTAINER }}" >> $GITHUB_ENV
+          echo "PGPASSWORD=${{ secrets.PG_PASSWORD }}" >> $GITHUB_ENV
+      
+      - name: Create backup
         run: |
           chmod +x ./scripts/backup.sh
           ./scripts/backup.sh
-
-  restore:
-    runs-on: ubuntu-latest
-    needs: backup
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Restore PostgreSQL database
+        
+      - name: Restore from backup
         run: |
           chmod +x ./scripts/restore.sh
           ./scripts/restore.sh
