@@ -37,6 +37,31 @@ jobs:
           echo "AZURE_STORAGE_ACCOUNT=${{ secrets.AZURE_STORAGE_ACCOUNT }}" >> $GITHUB_ENV
           echo "AZURE_STORAGE_CONTAINER=${{ secrets.AZURE_STORAGE_CONTAINER }}" >> $GITHUB_ENV
           echo "PGPASSWORD=${{ secrets.PG_PASSWORD }}" >> $GITHUB_ENV
+          echo "RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}" >> $GITHUB_ENV
+      
+      - name: Get runner IP and configure firewall rules
+        run: |
+          # Get public IP of the GitHub runner
+          PUBLIC_IP=$(curl -s https://api.ipify.org)
+          echo "RUNNER_IP=$PUBLIC_IP" >> $GITHUB_ENV
+          
+          # Add firewall rules to PostgreSQL servers
+          az postgres flexible-server firewall-rule create \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --name ${{ secrets.PG_HOST_PROD }} \
+            --rule-name "github-action-runner" \
+            --start-ip-address $PUBLIC_IP \
+            --end-ip-address $PUBLIC_IP
+          
+          az postgres flexible-server firewall-rule create \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --name ${{ secrets.PG_HOST_DEV }} \
+            --rule-name "github-action-runner" \
+            --start-ip-address $PUBLIC_IP \
+            --end-ip-address $PUBLIC_IP
+          
+          # Wait for firewall rules to propagate
+          sleep 30
       
       - name: Create backup
         run: |
@@ -47,3 +72,18 @@ jobs:
         run: |
           chmod +x ./scripts/restore.sh
           ./scripts/restore.sh
+          
+      - name: Clean up firewall rules
+        if: always()  # This ensures the step runs even if previous steps fail
+        run: |
+          az postgres flexible-server firewall-rule delete \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --name ${{ secrets.PG_HOST_PROD }} \
+            --rule-name "github-action-runner" \
+            --yes
+            
+          az postgres flexible-server firewall-rule delete \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --name ${{ secrets.PG_HOST_DEV }} \
+            --rule-name "github-action-runner" \
+            --yes
