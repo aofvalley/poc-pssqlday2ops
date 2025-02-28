@@ -23,7 +23,7 @@ PGPASSWORD=${PG_PASSWORD} psql -h ${PG_HOST_DEV}.postgres.database.azure.com -U 
 
 # Restore using pg_restore
 echo "Restoring database from backup..."
-pg_restore -h ${PG_HOST_DEV}.postgres.database.azure.com -U ${PG_USER} \
+PGPASSWORD=${PG_PASSWORD} pg_restore -h ${PG_HOST_DEV}.postgres.database.azure.com -U ${PG_USER} \
   -d ${PG_DATABASE} -v ${BACKUP_FILE}
 
 echo "Restore completed successfully."

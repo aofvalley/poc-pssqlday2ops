@@ -36,7 +36,6 @@ jobs:
           echo "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" >> $GITHUB_ENV
           echo "AZURE_STORAGE_ACCOUNT=${{ secrets.AZURE_STORAGE_ACCOUNT }}" >> $GITHUB_ENV
           echo "AZURE_STORAGE_CONTAINER=${{ secrets.AZURE_STORAGE_CONTAINER }}" >> $GITHUB_ENV
-          echo "PGPASSWORD=${{ secrets.PG_PASSWORD }}" >> $GITHUB_ENV
           echo "RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}" >> $GITHUB_ENV
       
       - name: Verify environment variables
@@ -45,7 +44,7 @@ jobs:
           echo "PG_HOST_DEV=$PG_HOST_DEV"
           echo "PG_DATABASE=$PG_DATABASE"
           echo "PG_USER=$PG_USER"
-          echo "PGPASSWORD=$PGPASSWORD"
+          echo "PG_PASSWORD=$PG_PASSWORD"
           echo "RESOURCE_GROUP=$RESOURCE_GROUP"
           
       - name: Get runner IP and configure firewall rules
