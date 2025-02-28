@@ -8,7 +8,7 @@ BACKUP_FILE="${PG_DATABASE}_${TIMESTAMP}.dump"
 echo "Starting backup of ${PG_DATABASE} from ${PG_HOST_PROD}..."
 
 # Create backup using pg_dump
-pg_dump -h ${PG_HOST_PROD}.postgres.database.azure.com -U $PG_USER -d $PG_DATABASE -F c -b -v -f /tmp/db_backup.dump
+pg_dump -h ${PG_HOST_PROD}.postgres.database.azure.com -U $PG_USER -P $PG_PASSWORD -d $PG_DATABASE -F c -b -v -f /tmp/db_backup.dump
 
 echo "Backup completed successfully."
 
