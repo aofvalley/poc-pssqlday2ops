@@ -1,5 +1,6 @@
 .venv
-
+local.settings.json
+.vscode
 .funcignore
 vars.env
 .python_packages
