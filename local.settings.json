@@ -1,0 +1,11 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+      "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+      "FUNCTIONS_WORKER_RUNTIME": "python",
+      "GITHUB_OWNER": "your-github-username",
+      "GITHUB_REPO": "your-repo-name",
+      "GITHUB_WORKFLOW_ID": "pg-backup-restore.yml",
+      "GITHUB_TOKEN": "your-personal-access-token"
+    }
+  }
