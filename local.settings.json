@@ -3,9 +3,9 @@
     "Values": {
       "AzureWebJobsStorage": "UseDevelopmentStorage=true",
       "FUNCTIONS_WORKER_RUNTIME": "python",
-      "GITHUB_OWNER": "your-github-username",
-      "GITHUB_REPO": "your-repo-name",
+      "GITHUB_OWNER": "aofvalley",
+      "GITHUB_REPO": "ghaction-pgdumprestore-api",
       "GITHUB_WORKFLOW_ID": "pg-backup-restore.yml",
-      "GITHUB_TOKEN": "your-personal-access-token"
+      "GITHUB_TOKEN": "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"
     }
   }

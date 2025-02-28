@@ -1,4 +1,6 @@
 .venv
-.vscode
+
 .funcignore
 vars.env
+.python_packages
+__pycache__
