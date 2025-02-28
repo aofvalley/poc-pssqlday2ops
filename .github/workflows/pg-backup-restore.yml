@@ -47,15 +47,15 @@ jobs:
           
           # Add firewall rules to PostgreSQL servers
           az postgres flexible-server firewall-rule create \
-            --resource-group ${{ secrets.RESOURCE_GROUP }} \
-            --name ${{ secrets.PG_HOST_PROD }} \
+            --resource-group $RESOURCE_GROUP \
+            --name $PG_HOST_PROD \
             --rule-name "github-action-runner" \
             --start-ip-address $PUBLIC_IP \
             --end-ip-address $PUBLIC_IP
           
           az postgres flexible-server firewall-rule create \
-            --resource-group ${{ secrets.RESOURCE_GROUP }} \
-            --name ${{ secrets.PG_HOST_DEV }} \
+            --resource-group $RESOURCE_GROUP \
+            --name $PG_HOST_DEV \
             --rule-name "github-action-runner" \
             --start-ip-address $PUBLIC_IP \
             --end-ip-address $PUBLIC_IP
@@ -77,13 +77,13 @@ jobs:
         if: always()  # This ensures the step runs even if previous steps fail
         run: |
           az postgres flexible-server firewall-rule delete \
-            --resource-group ${{ secrets.RESOURCE_GROUP }} \
-            --name ${{ secrets.PG_HOST_PROD }} \
+            --resource-group $RESOURCE_GROUP \
+            --name $PG_HOST_PROD \
             --rule-name "github-action-runner" \
             --yes
             
           az postgres flexible-server firewall-rule delete \
-            --resource-group ${{ secrets.RESOURCE_GROUP }} \
-            --name ${{ secrets.PG_HOST_DEV }} \
+            --resource-group $RESOURCE_GROUP \
+            --name $PG_HOST_DEV \
             --rule-name "github-action-runner" \
             --yes
