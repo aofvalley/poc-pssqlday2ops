@@ -39,6 +39,15 @@ jobs:
           echo "PGPASSWORD=${{ secrets.PG_PASSWORD }}" >> $GITHUB_ENV
           echo "RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}" >> $GITHUB_ENV
       
+      - name: Verify environment variables
+        run: |
+          echo "PG_HOST_PROD=$PG_HOST_PROD"
+          echo "PG_HOST_DEV=$PG_HOST_DEV"
+          echo "PG_DATABASE=$PG_DATABASE"
+          echo "PG_USER=$PG_USER"
+          echo "PGPASSWORD=$PGPASSWORD"
+          echo "RESOURCE_GROUP=$RESOURCE_GROUP"
+          
       - name: Get runner IP and configure firewall rules
         run: |
           # Get public IP of the GitHub runner
