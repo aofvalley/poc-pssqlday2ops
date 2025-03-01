@@ -2,11 +2,22 @@ POST http://localhost:7071/api/workflow/trigger HTTP/1.1
 Content-Type: application/json
 
 {
-  "pg_host_prod": "prod-server",
-  "pg_host_dev": "dev-server",
-  "pg_database": "my_database",
-  "pg_user": "postgres",
-  "resource_group": "my-resource-group"
+  "pg_host_prod": "advpsqlfxuk",
+  "pg_host_dev": "advpsqlfxuk",
+  "pg_database": "test01",
+  "pg_user": "alfonsod",
+  "resource_group": "adv_data_rg"
 }
 
 GET http://localhost:7071/api/workflow/status HTTP/1.1
+
+
+curl -X POST http://localhost:7071/api/workflow/trigger \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pg_host_prod": "advpsqlfxuk",
+    "pg_host_dev": "advpsqlfxuk",
+    "pg_database": "test01",
+    "pg_user": "alfonsod",
+    "resource_group": "adv_data_rg"
+  }'
