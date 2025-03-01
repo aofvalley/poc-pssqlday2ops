@@ -1,23 +1,7 @@
 name: PostgreSQL Backup and Restore
 
 on:
-  workflow_dispatch:
-    inputs:
-      pg_host_prod:
-        description: 'Production PostgreSQL hostname'
-        required: true
-      pg_host_dev:
-        description: 'Development PostgreSQL hostname'
-        required: true
-      pg_database:
-        description: 'PostgreSQL database name'
-        required: true
-      pg_user:
-        description: 'PostgreSQL username'
-        required: true
-      resource_group:
-        description: 'Azure Resource Group'
-        required: true
+  workflow_dispatch:  # For manual activation
   schedule:
     - cron: '0 2 * * *'  # Runs daily at 2 AM UTC
 
@@ -45,14 +29,15 @@ jobs:
           
       - name: Set environment variables
         run: |
-          echo "PG_HOST_PROD=${{ github.event.inputs.pg_host_prod }}" >> $GITHUB_ENV
-          echo "PG_HOST_DEV=${{ github.event.inputs.pg_host_dev }}" >> $GITHUB_ENV
-          echo "PG_DATABASE=${{ github.event.inputs.pg_database }}" >> $GITHUB_ENV
-          echo "PG_USER=${{ github.event.inputs.pg_user }}" >> $GITHUB_ENV
+          echo "PG_HOST_PROD=${{ secrets.PG_HOST_PROD }}" >> $GITHUB_ENV
+          echo "PG_HOST_DEV=${{ secrets.PG_HOST_DEV }}" >> $GITHUB_ENV
+          echo "PG_DATABASE=${{ secrets.PG_DATABASE }}" >> $GITHUB_ENV
+          echo "PG_USER=${{ secrets.PG_USER }}" >> $GITHUB_ENV
           echo "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" >> $GITHUB_ENV
           echo "AZURE_STORAGE_ACCOUNT=${{ secrets.AZURE_STORAGE_ACCOUNT }}" >> $GITHUB_ENV
           echo "AZURE_STORAGE_CONTAINER=${{ secrets.AZURE_STORAGE_CONTAINER }}" >> $GITHUB_ENV
-          echo "RESOURCE_GROUP=${{ github.event.inputs.resource_group }}" >> $GITHUB_ENV
+          echo "PGPASSWORD=${{ secrets.PG_PASSWORD }}" >> $GITHUB_ENV
+          echo "RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}" >> $GITHUB_ENV
       
       - name: Get runner IP and configure firewall rules
         run: |
@@ -62,15 +47,15 @@ jobs:
           
           # Add firewall rules to PostgreSQL servers
           az postgres flexible-server firewall-rule create \
-            --resource-group $RESOURCE_GROUP \
-            --name $PG_HOST_PROD \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --name ${{ secrets.PG_HOST_PROD }} \
             --rule-name "github-action-runner" \
             --start-ip-address $PUBLIC_IP \
             --end-ip-address $PUBLIC_IP
           
           az postgres flexible-server firewall-rule create \
-            --resource-group $RESOURCE_GROUP \
-            --name $PG_HOST_DEV \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --name ${{ secrets.PG_HOST_DEV }} \
             --rule-name "github-action-runner" \
             --start-ip-address $PUBLIC_IP \
             --end-ip-address $PUBLIC_IP
@@ -92,13 +77,13 @@ jobs:
         if: always()  # This ensures the step runs even if previous steps fail
         run: |
           az postgres flexible-server firewall-rule delete \
-            --resource-group $RESOURCE_GROUP \
-            --name $PG_HOST_PROD \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --name ${{ secrets.PG_HOST_PROD }} \
             --rule-name "github-action-runner" \
             --yes
             
           az postgres flexible-server firewall-rule delete \
-            --resource-group $RESOURCE_GROUP \
-            --name $PG_HOST_DEV \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --name ${{ secrets.PG_HOST_DEV }} \
             --rule-name "github-action-runner" \
             --yes

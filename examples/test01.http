@@ -1,0 +1,10 @@
+POST http://localhost:7071/api/workflow/trigger HTTP/1.1
+Content-Type: application/json
+
+{
+  "pg_host_prod": "advpsqlfxuk",
+  "pg_host_dev": "advpsqlfxuk",
+  "pg_database": "test01",
+  "pg_user": "alfonsod",
+  "resource_group": "adv_data_rg"
+}
