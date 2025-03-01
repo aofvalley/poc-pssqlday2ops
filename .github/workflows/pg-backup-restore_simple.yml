@@ -1,4 +1,4 @@
-name: PostgreSQL Backup and Restore
+name: PostgreSQL Backup and Restore - Simple
 
 on:
   workflow_dispatch:  # For manual activation
