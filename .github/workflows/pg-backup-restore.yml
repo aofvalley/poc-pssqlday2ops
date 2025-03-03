@@ -3,6 +3,7 @@ name: PostgreSQL Backup and Restore
 on:
   workflow_dispatch:
     inputs:
+      
       pg_host_prod:
         description: 'Production PostgreSQL hostname'
         required: true
@@ -18,8 +19,6 @@ on:
       resource_group:
         description: 'Azure Resource Group'
         required: true
-  schedule:
-    - cron: '0 2 * * *'  # Runs daily at 2 AM UTC
 
 jobs:
   backup-restore:
