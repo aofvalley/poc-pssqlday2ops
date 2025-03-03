@@ -5,3 +5,4 @@ local.settings.json
 vars.env
 .python_packages
 __pycache__
+.python_version

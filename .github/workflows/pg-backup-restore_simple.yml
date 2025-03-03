@@ -2,8 +2,6 @@ name: PostgreSQL Backup and Restore - Simple
 
 on:
   workflow_dispatch:  # For manual activation
-  schedule:
-    - cron: '0 2 * * *'  # Runs daily at 2 AM UTC
 
 jobs:
   backup-restore:
