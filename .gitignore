@@ -5,3 +5,4 @@ vars.env
 .python_packages
 __pycache__
 .python_version
+secrets.json
