@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
   "pg_host_prod": "advpsqlfxuk",
-  "pg_host_dev": "advpsqlfxuk",
+  "pg_host_dev": "advpsqlfxukdev",
   "pg_database": "test01",
   "pg_user": "alfonsod",
   "resource_group": "adv_data_rg"

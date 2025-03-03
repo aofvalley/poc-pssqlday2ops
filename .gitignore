@@ -1,5 +1,4 @@
 .venv
-local.settings.json
 .vscode
 .funcignore
 vars.env
