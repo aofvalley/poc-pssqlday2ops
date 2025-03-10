@@ -16,7 +16,9 @@ st.set_page_config(
 )
 
 # Variables de configuración
-API_BASE_URL = st.sidebar.text_input("API Base URL", "http://localhost:7071")
+st.sidebar.title("Configuración de API")
+API_BASE_URL = st.sidebar.text_input("API Base URL", "https://pssqlapitest.azurewebsites.net")
+FUNCTION_KEY = st.sidebar.text_input("Azure Function Key", "", type="password")
 
 # Estilos CSS personalizados ajustados para modo oscuro
 st.markdown("""
@@ -88,11 +90,11 @@ st.markdown("""
 def get_health_status():
     """Obtiene el estado de salud de la API"""
     try:
-        response = requests.get(f"{API_BASE_URL}/api/health", timeout=10)
+        response = requests.get(f"{API_BASE_URL}/api/health", params={"code": FUNCTION_KEY}, timeout=10)
         if response.status_code == 200:
             return response.json()
         else:
-            st.error(f"Error al obtener estado de salud: {response.status_code}")
+            st.error(f"Error al obtener estado de salud: {response.status_code} - {response.text}")
             return None
     except Exception as e:
         st.error(f"Error de conexión: {str(e)}")
@@ -101,15 +103,19 @@ def get_health_status():
 def get_workflow_status(run_id=None):
     """Obtiene el estado actual del workflow"""
     try:
-        url = f"{API_BASE_URL}/api/workflow/status"
+        params = {"code": FUNCTION_KEY}
         if run_id:
-            url += f"?run_id={run_id}"
-        
-        response = requests.get(url, timeout=10)
+            params["run_id"] = run_id
+            
+        response = requests.get(
+            f"{API_BASE_URL}/api/workflow/status",
+            params=params,
+            timeout=10
+        )
         if response.status_code == 200:
             return response.json()
         else:
-            st.error(f"Error al obtener estado del workflow: {response.status_code}")
+            st.error(f"Error al obtener estado del workflow: {response.status_code} - {response.text}")
             return None
     except Exception as e:
         st.error(f"Error de conexión: {str(e)}")
@@ -120,8 +126,9 @@ def execute_workflow(workflow_data):
     try:
         response = requests.post(
             f"{API_BASE_URL}/api/workflow/dump-restore",
+            params={"code": FUNCTION_KEY},
             json=workflow_data,
-            timeout=10
+            timeout=30  # Aumentar timeout para operaciones de ejecución
         )
         if response.status_code == 202:
             return response.json()
@@ -135,7 +142,11 @@ def execute_workflow(workflow_data):
 def get_config():
     """Obtiene la configuración actual de la API"""
     try:
-        response = requests.get(f"{API_BASE_URL}/api/config", timeout=10)
+        response = requests.get(
+            f"{API_BASE_URL}/api/config",
+            params={"code": FUNCTION_KEY},
+            timeout=10
+        )
         if response.status_code == 200:
             return response.json()
         else:
@@ -167,6 +178,10 @@ def format_job_status(status, conclusion):
 
 # Navegación en la barra lateral con botones personalizados
 st.sidebar.title("PostgreSQL Backup & Restore")
+
+# Verificar si se ha proporcionado la Function Key
+if not FUNCTION_KEY and API_BASE_URL.startswith("https://"):
+    st.sidebar.warning("⚠️ Se requiere la Function Key para conectarse a Azure")
 
 pages = ["Dashboard", "Ejecutar Workflows", "Monitoreo", "Configuración"]
 if 'selected_page' not in st.session_state:
@@ -426,6 +441,10 @@ elif page == "Monitoreo":
 elif page == "Configuración":
     st.title("⚙️ Configuración")
     
+    # Verificar si falta la Function Key para Azure
+    if not FUNCTION_KEY and API_BASE_URL.startswith("https://"):
+        st.warning("⚠️ Se requiere la Function Key para conectarse a Azure. Por favor, ingrésela en la barra lateral.")
+    
     with st.spinner("Cargando configuración..."):
         config_data = get_config()
     
@@ -446,10 +465,19 @@ elif page == "Configuración":
         st.markdown("---")
         
         st.subheader("Información de la API")
+        # Usar params para las URLs de documentación
+        api_url_with_code = f"{API_BASE_URL}/api/docs"
+        openapi_url_with_code = f"{API_BASE_URL}/api/openapi.json"
+        
+        # Agregar el código de función a las URLs si existe
+        if FUNCTION_KEY:
+            api_url_with_code += f"?code={FUNCTION_KEY}"
+            openapi_url_with_code += f"?code={FUNCTION_KEY}"
+        
         st.markdown(f"""
         - **URL Base de la API**: {API_BASE_URL}
-        - **URL de Documentación Swagger**: [{API_BASE_URL}/api/docs]({API_BASE_URL}/api/docs)
-        - **URL de OpenAPI**: [{API_BASE_URL}/api/openapi.json]({API_BASE_URL}/api/openapi.json)
+        - **URL de Documentación Swagger**: [{API_BASE_URL}/api/docs]({api_url_with_code})
+        - **URL de OpenAPI**: [{API_BASE_URL}/api/openapi.json]({openapi_url_with_code})
         """)
         
         st.markdown("---")
@@ -462,9 +490,18 @@ elif page == "Configuración":
             {"Endpoint": "/api/workflow/status", "Método": "GET", "Descripción": "Obtener estado de workflows"}
         ]
         
+        st.markdown("**Nota**: Todos los endpoints requieren el parámetro `code` con la Function Key cuando se accede desde Azure.")
         st.table(pd.DataFrame(endpoints))
+
+        # Agregar información de debug para ayudar a diagnosticar problemas
+        with st.expander("Información de Depuración"):
+            st.code(f"""
+API Base URL: {API_BASE_URL}
+Function Key configurada: {"Sí" if FUNCTION_KEY else "No"}
+Ejemplo de URL completa: {API_BASE_URL}/api/health?code=FUNCTION_KEY_HERE
+            """)
     else:
-        st.error("No se pudo obtener la configuración. Verifique la conexión con la API.")
+        st.error("No se pudo obtener la configuración. Verifique la conexión con la API y la Function Key.")
 
 # Pie de página
 st.markdown("---")

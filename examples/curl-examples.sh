@@ -2,7 +2,7 @@
 # Ejemplos de uso de la API PostgreSQL Backup & Restore con curl
 
 # Configurar las variables de la API (reemplazar con los valores correctos)
-API_URL=""
+API_URL="pssqlapitest.azurewebsites.net"
 FUNCTION_KEY=""
 
 # Solicitar la clave de función de forma segura
