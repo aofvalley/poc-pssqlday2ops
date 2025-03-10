@@ -146,10 +146,10 @@ Una vez que la API está ejecutándose localmente, puedes acceder a la interfaz 
 http://localhost:7071/api/docs
 ```
 
-### Disparar un workflow
+### Ejecutar un dump y restore de base de datos
 
 ```bash
-curl -X POST http://localhost:7071/api/workflow/trigger \
+curl -X POST http://localhost:7071/api/workflow/dump-restore \
   -H "Content-Type: application/json" \
   -d '{
     "pg_host_prod": "prod-server",
@@ -222,10 +222,10 @@ Una vez desplegada, puedes acceder a la documentación interactiva en:
 https://pgdumprestore-api.azurewebsites.net/api/docs
 ```
 
-### Disparar un workflow
+### Ejecutar un dump y restore de base de datos
 
 ```bash
-curl -X POST https://pgdumprestore-api.azurewebsites.net/api/workflow/trigger?code=TU_FUNCTION_KEY \
+curl -X POST https://pgdumprestore-api.azurewebsites.net/api/workflow/dump-restore?code=TU_FUNCTION_KEY \
   -H "Content-Type: application/json" \
   -d '{
     "pg_host_prod": "prod-server",

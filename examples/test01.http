@@ -1,5 +1,5 @@
-### Trigger workflow
-POST http://localhost:7071/api/workflow/trigger HTTP/1.1
+### Dump and restore database
+POST http://localhost:7071/api/workflow/dump-restore HTTP/1.1
 Content-Type: application/json
 
 {
@@ -10,22 +10,25 @@ Content-Type: application/json
   "resource_group": "adv_data_rg"
 }
 
-### Check workflow status (all runs)
+### Check detailed workflow status (latest run)
 GET http://localhost:7071/api/workflow/status HTTP/1.1
 
-### Check workflow status (specific run)
+### Check detailed workflow status (specific run)
 GET http://localhost:7071/api/workflow/status?run_id=12345678 HTTP/1.1
 
-### Health check
+### Health check with system diagnostics
 GET http://localhost:7071/api/health HTTP/1.1
-
-### Test endpoint
-GET http://localhost:7071/api/test HTTP/1.1
 
 ### Ver configuración actual
 GET http://localhost:7071/api/config HTTP/1.1
 
 ### cURL examples
+
+# Health check
+curl http://localhost:7071/api/health
+
+# Ver configuración
+curl http://localhost:7071/api/config
 
 # Trigger workflow
 curl -X POST http://localhost:7071/api/workflow/trigger \
@@ -38,17 +41,19 @@ curl -X POST http://localhost:7071/api/workflow/trigger \
     "resource_group": "adv_data_rg"
   }'
 
-# Check status of all workflows
+# Execute PostgreSQL dump and restore
+curl -X POST http://localhost:7071/api/workflow/dump-restore \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pg_host_prod": "advpsqlfxuk",
+    "pg_host_dev": "advpsqlfxukdev",
+    "pg_database": "test01",
+    "pg_user": "alfonsod",
+    "resource_group": "adv_data_rg"
+  }'
+
+# Check detailed status of latest workflow run
 curl http://localhost:7071/api/workflow/status
 
-# Check status of a specific workflow run
+# Check detailed status of a specific workflow run
 curl http://localhost:7071/api/workflow/status?run_id=12345678
-
-# Health check
-curl http://localhost:7071/api/health
-
-# Test endpoint
-curl http://localhost:7071/api/test
-
-# Ver configuración
-curl http://localhost:7071/api/config
