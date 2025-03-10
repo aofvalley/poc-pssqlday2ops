@@ -23,9 +23,9 @@ def load_secrets():
                     os.environ[key] = value
                     logging.info(f"Variable de entorno {key} cargada desde secrets.json")
         else:
-            logging.warning(f"El archivo {secrets_path} no existe. Usando solo variables de entorno.")
+            logging.info(f"El archivo {secrets_path} no existe. Usando solo variables de entorno.")
     except Exception as e:
-        logging.error(f"Error al cargar secrets.json: {str(e)}")
+        logging.warning(f"Error al cargar secrets.json: {str(e)}. Usando solo variables de entorno.")
 
 # Cargar secretos al importar este módulo
 load_secrets()
@@ -33,11 +33,23 @@ load_secrets()
 def get_github_config():
     """
     Obtiene la configuración de GitHub desde las variables de entorno.
-    Estas variables pueden haberse cargado desde secrets.json.
+    Estas variables pueden haberse cargado desde secrets.json o estar definidas en la configuración de Azure Functions.
     """
+    token = os.environ.get("GITHUB_TOKEN")
+    owner = os.environ.get("GITHUB_OWNER")
+    repo = os.environ.get("GITHUB_REPO")
+    workflow_id = os.environ.get("GITHUB_WORKFLOW_ID", "pg-backup-restore.yml")
+    
+    if not token:
+        logging.warning("GITHUB_TOKEN no está configurado. La API no podrá autenticarse con GitHub.")
+    if not owner:
+        logging.warning("GITHUB_OWNER no está configurado. La API necesita conocer el propietario del repositorio.")
+    if not repo:
+        logging.warning("GITHUB_REPO no está configurado. La API necesita conocer el nombre del repositorio.")
+    
     return {
-        "token": os.environ.get("GITHUB_TOKEN"),
-        "owner": os.environ.get("GITHUB_OWNER"),
-        "repo": os.environ.get("GITHUB_REPO"),
-        "workflow_id": os.environ.get("GITHUB_WORKFLOW_ID", "pg-backup-restore.yml")
+        "token": token,
+        "owner": owner,
+        "repo": repo,
+        "workflow_id": workflow_id
     }

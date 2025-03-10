@@ -1,4 +1,4 @@
-### Dump and restore database
+### Dump and restore database (Local)
 POST http://localhost:7071/api/workflow/dump-restore HTTP/1.1
 Content-Type: application/json
 
@@ -10,9 +10,10 @@ Content-Type: application/json
   "resource_group": "adv_data_rg"
 }
 
-### Dump and restore database (Function Apps)
-POST https://pgdumprestore.azurewebsites.net/api/workflow/dump-restore HTTP/1.1
+### Dump and restore database (Function App)
+POST https://pssqlapitest.azurewebsites.net/api/workflow/dump-restore?code={{function_key}} HTTP/1.1
 Content-Type: application/json
+
 {
   "pg_host_prod": "advpsqlfxuk",
   "pg_host_dev": "advpsqlfxukdev",
@@ -21,17 +22,29 @@ Content-Type: application/json
   "resource_group": "adv_data_rg"
 }
 
-### Check detailed workflow status (latest run)
+### Check detailed workflow status (latest run) - Local
 GET http://localhost:7071/api/workflow/status HTTP/1.1
 
-### Check detailed workflow status (specific run)
+### Check detailed workflow status (latest run) - Function App
+GET https://pssqlapitest.azurewebsites.net/api/workflow/status?code={{function_key}} HTTP/1.1
+
+### Check detailed workflow status (specific run) - Local
 GET http://localhost:7071/api/workflow/status?run_id=12345678 HTTP/1.1
 
-### Health check with system diagnostics
+### Check detailed workflow status (specific run) - Function App
+GET https://pssqlapitest.azurewebsites.net/api/workflow/status?run_id=12345678&code={{function_key}} HTTP/1.1
+
+### Health check with system diagnostics - Local
 GET http://localhost:7071/api/health HTTP/1.1
 
-### Ver configuración actual
+### Health check with system diagnostics - Function App
+GET https://pssqlapitest.azurewebsites.net/api/health?code={{function_key}} HTTP/1.1
+
+### Ver configuración actual - Local
 GET http://localhost:7071/api/config HTTP/1.1
+
+### Ver configuración actual - Function App
+GET https://pssqlapitest.azurewebsites.net/api/config?code={{function_key}} HTTP/1.1
 
 ### cURL examples
 
@@ -62,13 +75,13 @@ curl http://localhost:7071/api/workflow/status?run_id=12345678
 ### cURL Function Apps examples
 
 # Health check
-curl https://pgdumprestore.azurewebsites.net/api/health
+curl https://pssqlapitest.azurewebsites.net/api/health?code={{function_key}}
 
 # Ver configuración
-curl https://pgdumprestore.azurewebsites.net/api/config
+curl https://pssqlapitest.azurewebsites.net/api/config?code={{function_key}}
 
 # Execute PostgreSQL dump and restore
-curl -X POST https://pgdumprestore.azurewebsites.net/api/workflow/dump-restore \
+curl -X POST https://pssqlapitest.azurewebsites.net/api/workflow/dump-restore?code={{function_key}} \
   -H "Content-Type: application/json" \
   -d '{
     "pg_host_prod": "advpsqlfxuk",
@@ -79,7 +92,7 @@ curl -X POST https://pgdumprestore.azurewebsites.net/api/workflow/dump-restore \
   }'
 
 # Check detailed status of latest workflow run
-curl https://pgdumprestore.azurewebsites.net/api/workflow/status
+curl https://pssqlapitest.azurewebsites.net/api/workflow/status?code={{function_key}}
 
 # Check detailed status of a specific workflow run
-curl https://pgdumprestore.azurewebsites.net/api/workflow/status?run_id=12345678
+curl https://pssqlapitest.azurewebsites.net/api/workflow/status?run_id=12345678&code={{function_key}}
