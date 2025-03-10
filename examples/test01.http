@@ -13,7 +13,6 @@ Content-Type: application/json
 ### Dump and restore database (Function Apps)
 POST https://pgdumprestore.azurewebsites.net/api/workflow/dump-restore HTTP/1.1
 Content-Type: application/json
-
 {
   "pg_host_prod": "advpsqlfxuk",
   "pg_host_dev": "advpsqlfxukdev",
