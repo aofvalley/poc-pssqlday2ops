@@ -1,11 +1,7 @@
 {
-    "IsEncrypted": false,
-    "Values": {
-      "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-      "FUNCTIONS_WORKER_RUNTIME": "python",
-      "GITHUB_OWNER": "%GITHUB_OWNER%",
-      "GITHUB_REPO": "%GITHUB_REPO%",
-      "GITHUB_WORKFLOW_ID": "%GITHUB_WORKFLOW_ID%",
-      "GITHUB_TOKEN": "%GITHUB_TOKEN%"
-    }
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "python"
   }
+}

@@ -19,6 +19,12 @@ GET http://localhost:7071/api/workflow/status?run_id=12345678 HTTP/1.1
 ### Health check
 GET http://localhost:7071/api/health HTTP/1.1
 
+### Test endpoint
+GET http://localhost:7071/api/test HTTP/1.1
+
+### Ver configuración actual
+GET http://localhost:7071/api/config HTTP/1.1
+
 ### cURL examples
 
 # Trigger workflow
@@ -40,3 +46,9 @@ curl http://localhost:7071/api/workflow/status?run_id=12345678
 
 # Health check
 curl http://localhost:7071/api/health
+
+# Test endpoint
+curl http://localhost:7071/api/test
+
+# Ver configuración
+curl http://localhost:7071/api/config

@@ -86,9 +86,28 @@ python --version  # Debería mostrar Python 3.9.x
 pip install -r requirements.txt
 ```
 
-### Configurar variables de entorno locales
+### Configurar variables de entorno y secretos
 
-Edita el archivo `api/local.settings.json` con tus valores:
+Hay dos formas de configurar las variables necesarias:
+
+#### Opción 1: Usar archivo secrets.json
+
+Crea un archivo `secrets.json` en la raíz del proyecto con el siguiente formato:
+
+```json
+{
+    "GITHUB_OWNER": "tu_usuario_github",
+    "GITHUB_REPO": "ghaction-pgdumprestore-api",
+    "GITHUB_WORKFLOW_ID": "pg-backup-restore.yml",
+    "GITHUB_TOKEN": "tu_github_token"
+}
+```
+
+La aplicación cargará automáticamente estos valores al iniciar.
+
+#### Opción 2: Usar local.settings.json
+
+Alternativamente, puedes editar el archivo `api/local.settings.json`:
 
 ```json
 {
@@ -104,6 +123,14 @@ Edita el archivo `api/local.settings.json` con tus valores:
 }
 ```
 
+#### Verificar la configuración
+
+Una vez iniciada la aplicación, puedes verificar que la configuración se ha cargado correctamente visitando:
+
+```
+http://localhost:7071/api/config
+```
+
 ## 2. Ejecutar localmente
 
 ```bash
@@ -116,7 +143,7 @@ func start
 Una vez que la API está ejecutándose localmente, puedes acceder a la interfaz de Swagger para explorar la API en:
 
 ```
-http://localhost:7071/docs
+http://localhost:7071/api/docs
 ```
 
 ### Disparar un workflow
@@ -192,7 +219,7 @@ func azure functionapp publish pgdumprestore-api
 Una vez desplegada, puedes acceder a la documentación interactiva en:
 
 ```
-https://pgdumprestore-api.azurewebsites.net/docs
+https://pgdumprestore-api.azurewebsites.net/api/docs
 ```
 
 ### Disparar un workflow

@@ -2,4 +2,3 @@ azure-functions
 requests
 fastapi
 uvicorn
-azure-functions-fastapi

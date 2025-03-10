@@ -1,5 +1,22 @@
+import logging
 import azure.functions as func
-from main import app
+from azure.functions import AsgiMiddleware
 
-# Create the Azure Functions app
-app = func.AsgiFunctionApp(app=app, http_auth_level=func.AuthLevel.FUNCTION)
+# Importar config primero para cargar los secretos
+import config
+import main
+
+# Configurar el logging
+logging.info("Iniciando aplicación Azure Functions con FastAPI")
+
+# Create the ASGI middleware
+asgi_handler = AsgiMiddleware(main.app)
+
+# Create a function app that properly exposes the function for Azure Functions
+app = func.FunctionApp()
+
+# Define a route for all HTTP requests
+@app.route(route="{*route}", auth_level=func.AuthLevel.FUNCTION, methods=["GET", "POST"])
+def handle_http(req: func.HttpRequest) -> func.HttpResponse:
+    """Main entry point for the Azure Function."""
+    return asgi_handler.handle(req)

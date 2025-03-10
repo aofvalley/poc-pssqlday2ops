@@ -8,8 +8,16 @@ import requests
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 
-app = FastAPI(title="PostgreSQL Backup and Restore API",
-              description="API for triggering PostgreSQL backup and restore workflows")
+# Importar la configuración
+from config import get_github_config
+
+# Set the path for the docs - ensure it works when deployed
+app = FastAPI(
+    title="PostgreSQL Backup and Restore API",
+    description="API for triggering PostgreSQL backup and restore workflows",
+    docs_url="/api/docs",
+    openapi_url="/api/openapi.json"
+)
 
 class WorkflowRequest(BaseModel):
     pg_host_prod: str
@@ -23,6 +31,28 @@ async def health_check():
     """Health check endpoint to verify the API is running."""
     return {"status": "healthy", "version": "1.0.0"}
 
+@app.get("/api/test")
+async def test_endpoint():
+    """A simple test endpoint to verify the API is running."""
+    return {"message": "API is working correctly!"}
+
+@app.get("/api/config")
+async def get_config():
+    """
+    Endpoint para verificar la configuración cargada (sin mostrar secretos completos).
+    """
+    config = get_github_config()
+    # Ocultar el token para seguridad
+    if config["token"]:
+        config["token"] = config["token"][:5] + "..." + config["token"][-5:]
+    
+    return {
+        "github_owner": config["owner"],
+        "github_repo": config["repo"],
+        "github_workflow_id": config["workflow_id"],
+        "token_loaded": bool(config["token"])
+    }
+
 @app.post("/api/workflow/trigger", status_code=202)
 async def trigger_workflow(workflow_data: WorkflowRequest):
     """
@@ -30,11 +60,12 @@ async def trigger_workflow(workflow_data: WorkflowRequest):
     """
     logging.info('Request received to trigger GitHub workflow.')
     
-    # Get GitHub configuration from environment variables
-    github_token = os.environ.get('GITHUB_TOKEN')
-    github_owner = os.environ.get('GITHUB_OWNER')
-    github_repo = os.environ.get('GITHUB_REPO')
-    github_workflow_id = os.environ.get('GITHUB_WORKFLOW_ID', 'pg-backup-restore.yml')
+    # Obtener la configuración de GitHub
+    github_config = get_github_config()
+    github_token = github_config["token"]
+    github_owner = github_config["owner"]
+    github_repo = github_config["repo"]
+    github_workflow_id = github_config["workflow_id"]
     
     if not all([github_token, github_owner, github_repo]):
         raise HTTPException(
@@ -99,10 +130,11 @@ async def get_workflow_status(run_id: Optional[str] = Query(None, description="S
     """
     logging.info('Request received to check GitHub workflow status.')
     
-    # Get GitHub configuration from environment variables
-    github_token = os.environ.get('GITHUB_TOKEN')
-    github_owner = os.environ.get('GITHUB_OWNER')
-    github_repo = os.environ.get('GITHUB_REPO')
+    # Obtener la configuración de GitHub
+    github_config = get_github_config()
+    github_token = github_config["token"]
+    github_owner = github_config["owner"]
+    github_repo = github_config["repo"]
     
     if not all([github_token, github_owner, github_repo]):
         raise HTTPException(
@@ -142,9 +174,5 @@ async def get_workflow_status(run_id: Optional[str] = Query(None, description="S
             detail=str(e)
         )
 
-# Hook up Azure Functions integration
-def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
-    """
-    Azure Functions entry point that integrates with the FastAPI application.
-    """
-    return func.AsgiMiddleware(app).handle(req, context)
+# Note: The Azure Functions integration now happens in function_app.py 
+# so we don't need the original main() function here
