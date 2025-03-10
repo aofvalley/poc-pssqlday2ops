@@ -16,7 +16,7 @@ asgi_handler = AsgiMiddleware(main.app)
 app = func.FunctionApp()
 
 # Define a route for all HTTP requests
-@app.route(route="{*route}", auth_level=func.AuthLevel.FUNCTION, methods=["GET", "POST"])
+@app.route(route="{*route}", auth_level=func.AuthLevel.ANONYMOUS, methods=["GET", "POST"])
 def handle_http(req: func.HttpRequest) -> func.HttpResponse:
     """Main entry point for the Azure Function."""
     return asgi_handler.handle(req)
