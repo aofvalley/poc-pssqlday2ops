@@ -3,3 +3,6 @@ requests
 python-dotenv
 azure-identity
 azure-keyvault-secrets
+fastapi
+uvicorn
+azure-functions-fastapi

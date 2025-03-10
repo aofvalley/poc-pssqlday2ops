@@ -1,3 +1,4 @@
+### Trigger workflow
 POST http://localhost:7071/api/workflow/trigger HTTP/1.1
 Content-Type: application/json
 
@@ -9,9 +10,18 @@ Content-Type: application/json
   "resource_group": "adv_data_rg"
 }
 
+### Check workflow status (all runs)
 GET http://localhost:7071/api/workflow/status HTTP/1.1
 
+### Check workflow status (specific run)
+GET http://localhost:7071/api/workflow/status?run_id=12345678 HTTP/1.1
 
+### Health check
+GET http://localhost:7071/api/health HTTP/1.1
+
+### cURL examples
+
+# Trigger workflow
 curl -X POST http://localhost:7071/api/workflow/trigger \
   -H "Content-Type: application/json" \
   -d '{
@@ -21,3 +31,12 @@ curl -X POST http://localhost:7071/api/workflow/trigger \
     "pg_user": "alfonsod",
     "resource_group": "adv_data_rg"
   }'
+
+# Check status of all workflows
+curl http://localhost:7071/api/workflow/status
+
+# Check status of a specific workflow run
+curl http://localhost:7071/api/workflow/status?run_id=12345678
+
+# Health check
+curl http://localhost:7071/api/health

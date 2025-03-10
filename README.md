@@ -1,10 +1,10 @@
 # PostgreSQL Backup and Restore API
 
-Esta aplicación permite ejecutar un pipeline de GitHub Actions para realizar backups y restauraciones de bases de datos PostgreSQL mediante una API REST implementada con Azure Functions.
+Esta aplicación permite ejecutar un pipeline de GitHub Actions para realizar backups y restauraciones de bases de datos PostgreSQL mediante una API REST implementada con Azure Functions y FastAPI.
 
 ## Requisitos previos
 
-- Python 3.7 a 3.12 (Azure Functions requiere específicamente estas versiones)
+- Python 3.8 a 3.12 (recomendado para FastAPI y Azure Functions)
 - Azure Functions Core Tools 4.x
 - Una cuenta de GitHub con un token de acceso personal (PAT)
 - Una cuenta de Azure 
@@ -83,7 +83,6 @@ source .venv/bin/activate
 python --version  # Debería mostrar Python 3.9.x
 
 # Instalar las dependencias
-cd api
 pip install -r requirements.txt
 ```
 
@@ -114,6 +113,12 @@ func start
 
 ## 3. Probar la API localmente
 
+Una vez que la API está ejecutándose localmente, puedes acceder a la interfaz de Swagger para explorar la API en:
+
+```
+http://localhost:7071/docs
+```
+
 ### Disparar un workflow
 
 ```bash
@@ -135,7 +140,13 @@ curl -X POST http://localhost:7071/api/workflow/trigger \
 curl http://localhost:7071/api/workflow/status
 
 # Ver una ejecución específica (reemplaza 123456789 con el ID de la ejecución)
-curl http://localhost:7071/api/workflow/status?runId=123456789
+curl http://localhost:7071/api/workflow/status?run_id=123456789
+```
+
+### Comprobar la salud del servicio
+
+```bash
+curl http://localhost:7071/api/health
 ```
 
 ## 4. Despliegue en Azure
@@ -177,6 +188,13 @@ func azure functionapp publish pgdumprestore-api
 
 ## 5. Uso de la API en producción
 
+### Interfaz de Swagger
+Una vez desplegada, puedes acceder a la documentación interactiva en:
+
+```
+https://pgdumprestore-api.azurewebsites.net/docs
+```
+
 ### Disparar un workflow
 
 ```bash
@@ -198,7 +216,12 @@ curl -X POST https://pgdumprestore-api.azurewebsites.net/api/workflow/trigger?co
 curl https://pgdumprestore-api.azurewebsites.net/api/workflow/status?code=TU_FUNCTION_KEY
 
 # Ver una ejecución específica
-curl https://pgdumprestore-api.azurewebsites.net/api/workflow/status?code=TU_FUNCTION_KEY&runId=123456789
+curl https://pgdumprestore-api.azurewebsites.net/api/workflow/status?code=TU_FUNCTION_KEY&run_id=123456789
+```
+
+### Comprobar la salud del servicio
+```bash
+curl https://pgdumprestore-api.azurewebsites.net/api/health?code=TU_FUNCTION_KEY
 ```
 
 ## Seguridad
