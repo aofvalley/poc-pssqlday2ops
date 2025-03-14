@@ -547,15 +547,15 @@ elif page == "Operaciones Day-2":
             )
             
             # Add version format option
-            version_format = st.radio(
-                "Formato de versión",
-                ["Número (ej: 14)", "String con punto (ej: '14.0')"],
-                index=0,
-                help="Algunos servidores requieren el formato numérico, otros requieren el formato de string con punto decimal."
-            )
-            
-            if version_format == "String con punto (ej: '14.0')":
-                target_version = f"{target_version}.0"
+            #version_format = st.radio(
+            #    "Formato de versión",
+            #    ["Número (ej: 14)", "String con punto (ej: '14.0')"],
+            #    index=0,
+            #    help="Algunos servidores requieren el formato numérico, otros requieren el formato de string con punto decimal."
+            #)
+            #
+            #if version_format == "String con punto (ej: '14.0')":
+            #    target_version = f"{target_version}.0"
             
             # API endpoint selection
             endpoint_type = st.radio(
