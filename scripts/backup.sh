@@ -29,12 +29,13 @@ required_vars=("PG_HOST_PROD" "PG_USER" "PG_PASSWORD" "PG_DATABASE" "AZURE_STORA
 for var in "${required_vars[@]}"; do
     if [ -z "${!var}" ]; then
         echo "Error: Required environment variable $var is not set"
+        echo "Make sure all required parameters are provided in the GitHub workflow inputs"
         exit 1
     fi
 done
 
 # Create backup using pg_dump
-echo "Executing pg_dump..."
+echo "Executing pg_dump with user $PG_USER on database $PG_DATABASE from server ${PG_HOST_PROD}.postgres.database.azure.com..."
 PGPASSWORD=$PG_PASSWORD pg_dump -h ${PG_HOST_PROD}.postgres.database.azure.com -U $PG_USER -d $PG_DATABASE -F c -b -v -f /tmp/db_backup.dump
 
 if [ $? -ne 0 ]; then
@@ -45,7 +46,7 @@ fi
 echo "Backup completed successfully."
 
 # Upload to Azure Storage with retry mechanism
-echo "Uploading backup to Azure Storage..."
+echo "Uploading backup to Azure Storage account ${AZURE_STORAGE_ACCOUNT} in container ${AZURE_STORAGE_CONTAINER}..."
 MAX_RETRIES=5
 for i in $(seq 1 $MAX_RETRIES); do
     echo "Upload attempt $i of $MAX_RETRIES..."

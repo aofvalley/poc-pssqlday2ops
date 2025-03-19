@@ -68,16 +68,20 @@ if st.session_state.selected_operation == "refresh":
             pg_host_prod = st.text_input("Host de Producción", placeholder="prod-postgres")
             pg_database = st.text_input("Nombre de la Base de Datos", placeholder="mydb")
             resource_group = st.text_input("Grupo de Recursos", placeholder="rg-production")
+            pg_password = st.text_input("Contraseña PostgreSQL", type="password", placeholder="********")
         
         with col2:
             pg_host_dev = st.text_input("Host de Desarrollo", placeholder="dev-postgres")
             pg_user = st.text_input("Usuario PostgreSQL", placeholder="postgres")
+            azure_storage_account = st.text_input("Azure Storage Account", placeholder="mystorageaccount")
+            azure_storage_container = st.text_input("Azure Storage Container", placeholder="backups")
         
         st.text("Esta operación hará un backup de la base de datos de producción y la restaurará en el entorno de desarrollo.")
         submit_button = st.form_submit_button("Iniciar Refresco de Entornos")
         
         if submit_button:
-            if not all([pg_host_prod, pg_host_dev, pg_database, pg_user, resource_group]):
+            if not all([pg_host_prod, pg_host_dev, pg_database, pg_user, pg_password, 
+                        resource_group, azure_storage_account, azure_storage_container]):
                 st.error("Por favor complete todos los campos requeridos.")
             else:
                 workflow_data = {
@@ -85,7 +89,10 @@ if st.session_state.selected_operation == "refresh":
                     "pg_host_dev": pg_host_dev,
                     "pg_database": pg_database,
                     "pg_user": pg_user,
-                    "resource_group": resource_group
+                    "pg_password": pg_password,
+                    "resource_group": resource_group,
+                    "azure_storage_account": azure_storage_account,
+                    "azure_storage_container": azure_storage_container
                 }
                 
                 with st.spinner("Iniciando workflow..."):

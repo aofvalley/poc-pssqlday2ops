@@ -3,7 +3,6 @@ name: PostgreSQL Backup and Restore
 on:
   workflow_dispatch:
     inputs:
-      
       pg_host_prod:
         description: 'Production PostgreSQL hostname'
         required: true
@@ -15,6 +14,15 @@ on:
         required: true
       pg_user:
         description: 'PostgreSQL username'
+        required: true
+      pg_password:
+        description: 'PostgreSQL password'
+        required: true
+      azure_storage_account:
+        description: 'Azure Storage Account name'
+        required: true
+      azure_storage_container:
+        description: 'Azure Storage Container name'
         required: true
       resource_group:
         description: 'Azure Resource Group'
@@ -52,9 +60,9 @@ jobs:
           echo "PG_HOST_DEV=${{ github.event.inputs.pg_host_dev }}" >> $GITHUB_ENV
           echo "PG_DATABASE=${{ github.event.inputs.pg_database }}" >> $GITHUB_ENV
           echo "PG_USER=${{ github.event.inputs.pg_user }}" >> $GITHUB_ENV
-          echo "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" >> $GITHUB_ENV
-          echo "AZURE_STORAGE_ACCOUNT=${{ secrets.AZURE_STORAGE_ACCOUNT }}" >> $GITHUB_ENV
-          echo "AZURE_STORAGE_CONTAINER=${{ secrets.AZURE_STORAGE_CONTAINER }}" >> $GITHUB_ENV
+          echo "PG_PASSWORD=${{ github.event.inputs.pg_password }}" >> $GITHUB_ENV
+          echo "AZURE_STORAGE_ACCOUNT=${{ github.event.inputs.azure_storage_account }}" >> $GITHUB_ENV
+          echo "AZURE_STORAGE_CONTAINER=${{ github.event.inputs.azure_storage_container }}" >> $GITHUB_ENV
           echo "RESOURCE_GROUP=${{ github.event.inputs.resource_group }}" >> $GITHUB_ENV
       
       - name: Get runner IP and configure firewall rules

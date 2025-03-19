@@ -25,12 +25,13 @@ required_vars=("PG_HOST_DEV" "PG_USER" "PG_PASSWORD" "PG_DATABASE" "AZURE_STORAG
 for var in "${required_vars[@]}"; do
     if [ -z "${!var}" ]; then
         echo "Error: Required environment variable $var is not set"
+        echo "Make sure all required parameters are provided in the GitHub workflow inputs"
         exit 1
     fi
 done
 
 # Download from Azure Storage
-echo "Downloading backup from Azure Storage..."
+echo "Downloading backup ${BACKUP_FILE} from Azure Storage account ${AZURE_STORAGE_ACCOUNT} in container ${AZURE_STORAGE_CONTAINER}..."
 MAX_RETRIES=3
 for i in $(seq 1 $MAX_RETRIES); do
     echo "Download attempt $i of $MAX_RETRIES..."
@@ -55,7 +56,8 @@ fi
 echo "Backup downloaded successfully."
 
 # Drop and recreate database
-echo "Dropping existing database if it exists..."
+echo "Connecting to ${PG_HOST_DEV}.postgres.database.azure.com with user ${PG_USER}..."
+echo "Dropping existing database ${PG_DATABASE} if it exists..."
 if ! PGPASSWORD=${PG_PASSWORD} psql -h ${PG_HOST_DEV}.postgres.database.azure.com -U ${PG_USER} postgres -c "DROP DATABASE IF EXISTS ${PG_DATABASE} WITH (FORCE);" ; then
     echo "Error: Failed to drop database ${PG_DATABASE}"
     exit 1
@@ -68,7 +70,7 @@ if ! PGPASSWORD=${PG_PASSWORD} psql -h ${PG_HOST_DEV}.postgres.database.azure.co
 fi
 
 # Restore using pg_restore
-echo "Restoring database from backup..."
+echo "Restoring database ${PG_DATABASE} from backup file ${BACKUP_FILE}..."
 if ! PGPASSWORD=${PG_PASSWORD} pg_restore -h ${PG_HOST_DEV}.postgres.database.azure.com -U ${PG_USER} -d ${PG_DATABASE} -v ${BACKUP_FILE} ; then
     echo "Warning: pg_restore completed with warnings or errors. Check the output above for details."
     # No salimos con error porque pg_restore puede terminar con código distinto de 0 pero la base de datos
