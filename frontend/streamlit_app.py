@@ -15,7 +15,7 @@ secrets = load_secrets()
 st.sidebar.title("PostgreSQL Backup & Restore")
 st.sidebar.title("Configuración de API")
 API_BASE_URL = st.sidebar.text_input("API Base URL", "https://alfonsodapi.azure-api.net")
-FUNCTION_KEY = st.sidebar.text_input("API Subscription Key", "CNMQhgheWfH+6WcTT9kkDjfs0Y79AD9mAzSpX5UYhP4b686rde1cAw==", type="password")
+FUNCTION_KEY = st.sidebar.text_input("API Subscription Key", "", type="password")
 
 # Almacenar en session_state para acceso desde otras páginas
 if "api_base_url" not in st.session_state:
