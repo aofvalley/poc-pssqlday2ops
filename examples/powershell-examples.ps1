@@ -59,7 +59,10 @@ $body = @{
     pg_host_dev = "advpsqlfxukdev" 
     pg_database = "test01"
     pg_user = "alfonsod"
+    pg_password = "securepassword123"
     resource_group = "adv_data_rg"
+    storage_account = "advpsqlstorage"
+    storage_container = "backups"
 } | ConvertTo-Json
 
 try {

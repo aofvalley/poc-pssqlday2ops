@@ -7,7 +7,10 @@ Content-Type: application/json
   "pg_host_dev": "advpsqlfxukdev",
   "pg_database": "test01",
   "pg_user": "alfonsod",
-  "resource_group": "adv_data_rg"
+  "pg_password": "securepassword123",
+  "resource_group": "adv_data_rg",
+  "storage_account": "advpsqlstorage",
+  "storage_container": "backups"
 }
 
 ### Dump and restore database (Function App)
@@ -19,7 +22,10 @@ Content-Type: application/json
   "pg_host_dev": "advpsqlfxukdev",
   "pg_database": "test01",
   "pg_user": "alfonsod",
-  "resource_group": "adv_data_rg"
+  "pg_password": "securepassword123",
+  "resource_group": "adv_data_rg",
+  "storage_account": "advpsqlstorage",
+  "storage_container": "backups"
 }
 
 ### Check detailed workflow status (latest run) - Local
@@ -62,7 +68,10 @@ curl -X POST http://localhost:7071/api/workflow/dump-restore \
     "pg_host_dev": "advpsqlfxukdev",
     "pg_database": "test01",
     "pg_user": "alfonsod",
-    "resource_group": "adv_data_rg"
+    "pg_password": "securepassword123",
+    "resource_group": "adv_data_rg",
+    "storage_account": "advpsqlstorage",
+    "storage_container": "backups"
   }'
 
 # Check detailed status of latest workflow run
@@ -88,7 +97,10 @@ curl -X POST https://pssqlapitest.azurewebsites.net/api/workflow/dump-restore?co
     "pg_host_dev": "advpsqlfxukdev",
     "pg_database": "test01",
     "pg_user": "alfonsod",
-    "resource_group": "adv_data_rg"
+    "pg_password": "securepassword123",
+    "resource_group": "adv_data_rg",
+    "storage_account": "advpsqlstorage",
+    "storage_container": "backups"
   }'
 
 # Check detailed status of latest workflow run

@@ -151,7 +151,10 @@ $body = @{
   pg_host_dev = "dev-server"
   pg_database = "my_database"
   pg_user = "postgres"
+  pg_password = "securepassword123"
   resource_group = "my-resource-group"
+  storage_account = "mystorageaccount"
+  storage_container = "backups"
 } | ConvertTo-Json
 
 Invoke-RestMethod -Method Post -Uri "http://localhost:7071/api/workflow/dump-restore" -Body $body -ContentType "application/json" | ConvertTo-Json
@@ -166,7 +169,10 @@ curl -X POST http://localhost:7071/api/workflow/dump-restore \
     "pg_host_dev": "dev-server",
     "pg_database": "my_database",
     "pg_user": "postgres",
-    "resource_group": "my-resource-group"
+    "pg_password": "securepassword123",
+    "resource_group": "my-resource-group",
+    "storage_account": "mystorageaccount",
+    "storage_container": "backups"
   }'
 ```
 
@@ -394,7 +400,10 @@ $body = @{
   pg_host_dev = "dev-server"
   pg_database = "my_database"
   pg_user = "postgres"
+  pg_password = "securepassword123"
   resource_group = "my-resource-group"
+  storage_account = "mystorageaccount"
+  storage_container = "backups"
 } | ConvertTo-Json
 
 $response = Invoke-RestMethod -Method Post -Uri "https://$functionUrl/api/workflow/dump-restore?code=$functionKey" -Body $body -ContentType "application/json"
@@ -410,7 +419,10 @@ curl -X POST "https://$functionUrl/api/workflow/dump-restore?code=$functionKey" 
     "pg_host_dev": "dev-server",
     "pg_database": "my_database",
     "pg_user": "postgres",
-    "resource_group": "my-resource-group"
+    "pg_password": "securepassword123",
+    "resource_group": "my-resource-group",
+    "storage_account": "mystorageaccount",
+    "storage_container": "backups"
   }'
 ```
 

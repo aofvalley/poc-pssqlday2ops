@@ -26,7 +26,10 @@ class WorkflowRequest(BaseModel):
     pg_host_dev: str
     pg_database: str
     pg_user: str
+    pg_password: str  # New field for database password
     resource_group: str
+    storage_account: str  # New field for storage account
+    storage_container: str  # New field for storage container
 
 class HealthStatus(BaseModel):
     status: str
@@ -146,7 +149,10 @@ async def dump_restore_workflow(workflow_data: WorkflowRequest):
         'pg_host_dev': workflow_data.pg_host_dev,
         'pg_database': workflow_data.pg_database,
         'pg_user': workflow_data.pg_user,
-        'resource_group': workflow_data.resource_group
+        'pg_password': workflow_data.pg_password,  # Add password
+        'resource_group': workflow_data.resource_group,
+        'storage_account': workflow_data.storage_account,  # Add storage account
+        'storage_container': workflow_data.storage_container  # Add storage container
     }
     
     logging.info(f"Received parameters: {inputs}")

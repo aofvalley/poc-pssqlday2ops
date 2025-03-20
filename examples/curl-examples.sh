@@ -27,7 +27,10 @@ curl -s -X POST "https://$API_URL/api/workflow/dump-restore?code=$FUNCTION_KEY" 
     "pg_host_dev": "advpsqlfxukdev",
     "pg_database": "test01",
     "pg_user": "alfonsod",
-    "resource_group": "adv_data_rg"
+    "pg_password": "securepassword123",
+    "resource_group": "adv_data_rg",
+    "storage_account": "advpsqlstorage",
+    "storage_container": "backups"
   }' | jq
 
 # 4. Verificar estado del workflow (último ejecutado)

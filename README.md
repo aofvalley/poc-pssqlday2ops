@@ -205,7 +205,11 @@ El frontend estará disponible en http://localhost:8501
    - Servidor de origen (producción)
    - Servidor de destino (desarrollo)
    - Nombre de la base de datos
-   - Opciones adicionales
+   - Usuario de PostgreSQL
+   - Contraseña de PostgreSQL
+   - Grupo de recursos
+   - Cuenta de almacenamiento
+   - Contenedor de almacenamiento
 4. Haz clic en "Iniciar proceso"
 5. Observa el estado del trabajo en tiempo real gracias a la actualización dinámica de Streamlit
 
