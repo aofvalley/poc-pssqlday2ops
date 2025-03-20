@@ -67,6 +67,9 @@ En el Dashboard encontrarás:
    - Host de Desarrollo: Servidor PostgreSQL de destino
    - Nombre de la Base de Datos: Base de datos a copiar
    - Usuario PostgreSQL: Usuario con privilegios suficientes
+   - Contraseña PostgreSQL: Password del usuario PSSSQL.
+   - Storage Account: Storage account que usaras para almacenar los backups.
+   - Storage Container: El container donde almacenaras los backups.
    - Grupo de Recursos: Grupo de recursos de Azure donde están los servidores
 3. Haz clic en "Iniciar Refresco de Entornos" para ejecutar la operación
 
@@ -108,28 +111,6 @@ La sección de configuración muestra:
 3. **Información de Depuración**:
    - Ejemplos de llamadas a la API
    - Verificación de la configuración
-
-## Ejemplos de Uso Común
-
-### Ejemplo 1: Refresco de entorno de desarrollo
-1. Ve a "Operaciones Day-2"
-2. Selecciona "Refresco de Entornos"
-3. Completa el formulario con los siguientes datos:
-   - Host de Producción: "prod-postgres"
-   - Host de Desarrollo: "dev-postgres"
-   - Nombre de la Base de Datos: "app_database"
-   - Usuario PostgreSQL: "postgres"
-   - Grupo de Recursos: "rg-database"
-4. Haz clic en "Iniciar Refresco de Entornos"
-5. Ve a la sección de "Monitoreo" para seguir el progreso
-
-### Ejemplo 2: Actualización de versión de PostgreSQL
-1. Ve a "Operaciones Day-2"
-2. Selecciona "Version Upgrade"
-3. Completa el formulario con los datos requeridos incluyendo la versión objetivo
-4. Verifica la versión actual y las advertencias de compatibilidad
-5. Selecciona el tipo de endpoint y haz clic en "Iniciar Version Upgrade"
-6. Consulta el resultado de la operación y la URL para seguimiento
 
 ## Solución de Problemas
 

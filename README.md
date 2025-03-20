@@ -14,8 +14,8 @@ El sistema consta de tres componentes principales:
 
 ```
 +-------------+     +-----------------+     +---------------+     +---------------+
-|   Frontend   | --> |   Azure Function| --> | GitHub Actions| --> | PostgreSQL DB |
-|  (Streamlit) |     |   API (FastAPI) |     |   Workflow    |     |               |
+|   Frontend   | --> |  Azure Function| --> | GitHub Actions| --> | PostgreSQL DB |
+|  (Streamlit) |     |  API (FastAPI) |     |   Workflow    |     |               |
 +-------------+     +-----------------+     +---------------+     +---------------+
        ^                     |                     |
        |                     v                     v
@@ -59,17 +59,15 @@ El workflow (`pg-backup-restore.yml`) está diseñado para:
 
 - Realizar backup de bases de datos PostgreSQL
 - Restaurar bases de datos en otros servidores
-- Trabajar con credenciales seguras mediante GitHub Secrets
+- Trabajar con credenciales seguras mediante GitHub Secrets - AZURE_CREDENTIALS ( Azure Managed Identity )
 - Proporcionar logs detallados del proceso
 
 Ubicación: `.github/workflows/pg-backup-restore.yml`
 
 #### Capacidades
 
-- Backup completo de bases de datos
-- Backup selectivo de tablas
-- Restauración con o sin esquema
-- Soporte para transformaciones durante la restauración
+- Backup completo de bases de datos PostgreSQL en storage account.
+- Restauración de base de datos en instancia PostgreSQL desde storage account.
 
 ### 2. API REST (Azure Functions + FastAPI)
 
@@ -82,13 +80,19 @@ La API proporciona endpoints para:
 
 Ubicación: `/api`
 
-#### Endpoints principales
+- Iniciar update de major upgrades de PostgreSQL Flexible Server ( uso de APIM )
+
+#### Endpoints principales programados en Azure Function
 
 - `/api/workflow/dump-restore`: Inicia un proceso de backup/restore
 - `/api/workflow/status`: Consulta el estado de los workflows
 - `/api/health`: Verifica el estado de la API
 - `/api/config`: Consulta la configuración actual (solo desarrollo)
 - `/api/docs`: Documentación interactiva (Swagger UI)
+
+#### Endpoints principales usando APIM 
+
+- `/major/subscriptions/{subscriptionId}/resourceGroups/{resourcegroup}/providers/Microsoft.DBforPostgreSQL/flexibleServers/{servername}?api-version={api_version}`: Inicia un proceso de Major Upgrade.
 
 ### 3. Frontend (Streamlit)
 
@@ -213,7 +217,7 @@ El frontend estará disponible en http://localhost:8501
 4. Haz clic en "Iniciar proceso"
 5. Observa el estado del trabajo en tiempo real gracias a la actualización dinámica de Streamlit
 
-#### 2. Verificación del estado mediante API
+#### 2. Verificación del estado mediante API (local)
 
 ```bash
 curl http://localhost:7071/api/workflow/status?run_id=123456789
@@ -230,15 +234,7 @@ func azure functionapp publish pgdumprestore-api
 
 ### Despliegue del Frontend de Streamlit
 
-Puedes desplegar la aplicación Streamlit en varias plataformas:
-
-#### Opción 1: Streamlit Sharing (servicio oficial)
-
-1. Crea una cuenta en [share.streamlit.io](https://share.streamlit.io)
-2. Conecta tu repositorio GitHub
-3. Selecciona el archivo del frontend para su despliegue
-
-#### Opción 2: Despliegue en Azure Web App
+Puedes desplegar la aplicación Streamlit en Azure,
 
 ```bash
 # Crear un archivo de configuración para la web app

@@ -149,9 +149,7 @@ elif st.session_state.selected_operation == "upgrade":
         
         # Add help text about version limitations
         st.info("""
-        **Importante:** Las opciones de actualización de versión están limitadas por la versión actual del servidor.
-        Solo se pueden realizar actualizaciones a la siguiente versión principal disponible.
-        Por ejemplo, de PostgreSQL 12 solo se puede actualizar a PostgreSQL 13.
+        **Importante:** Durante las operaciones de actualziacion el servidor no estará disponible.
         """)
         
         # PostgreSQL version options
