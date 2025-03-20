@@ -4,7 +4,7 @@ from utils.api import get_health_status
 from utils.ui import format_status_class
 
 # Título de la página
-st.title("🐘 Dashboard de PostgreSQL")
+st.title("🐘 Dashboard")
 
 # Recuperar configuración de la API de la sesión
 api_base_url = st.session_state.get("api_base_url", "")

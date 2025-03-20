@@ -51,7 +51,8 @@ else:
             {"Endpoint": "/dumprestore/api/health", "Método": "GET", "Descripción": "Verificar estado de salud de la API"},
             {"Endpoint": "/dumprestore/api/config", "Método": "GET", "Descripción": "Obtener configuración actual"},
             {"Endpoint": "/dumprestore/api/workflow/dump-restore", "Método": "POST", "Descripción": "Iniciar workflow de backup/restore"},
-            {"Endpoint": "/dumprestore/api/workflow/status", "Método": "GET", "Descripción": "Obtener estado de workflows"}
+            {"Endpoint": "/dumprestore/api/workflow/status", "Método": "GET", "Descripción": "Obtener estado de workflows"},
+            {"Endpoint": "/major/...", "Método": "PATCH", "Descripción": "Major version upgrade de servidor PSSQL flexible server"}
         ]
         
         st.markdown("**Nota**: Todos los endpoints requieren el encabezado `Ocp-Apim-Subscription-Key` con la clave de suscripción de API Management.")
