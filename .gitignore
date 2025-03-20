@@ -7,3 +7,4 @@ __pycache__
 .python_version
 secrets.json
 examples/
+examples/**
