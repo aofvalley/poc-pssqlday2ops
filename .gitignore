@@ -6,3 +6,4 @@ vars.env
 __pycache__
 .python_version
 secrets.json
+examples/

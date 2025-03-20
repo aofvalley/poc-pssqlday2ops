@@ -24,7 +24,7 @@ Content-Type: application/json
   "pg_user": "alfonsod",
   "pg_password": "securepassword123",
   "resource_group": "adv_data_rg",
-  "storage_account": "advpsqlstorage",
+  "storage_account": "advsatest",
   "storage_container": "backups"
 }
 
@@ -45,6 +45,9 @@ GET http://localhost:7071/api/health HTTP/1.1
 
 ### Health check with system diagnostics - Function App
 GET https://pssqlapitest.azurewebsites.net/api/health?code={{function_key}} HTTP/1.1
+
+### Health check with system diagnostics - Function App (Azure API Management)
+GET https://alfonsodapi.azure-api.net/dumprestore/api/health?code={{function_key}} HTTP/1.1
 
 ### Ver configuración actual - Local
 GET http://localhost:7071/api/config HTTP/1.1
