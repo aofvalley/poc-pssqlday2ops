@@ -21,7 +21,7 @@ pip install -r requirements.txt
 
 2. Ejecuta la aplicación Streamlit:
 ```bash
-streamlit run streamlit_app.py
+streamlit run Main.py
 ```
 
 3. Accede a la aplicación en tu navegador:
