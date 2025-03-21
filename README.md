@@ -14,8 +14,8 @@ El sistema consta de tres componentes principales:
 
 ```
 +-------------+     +-----------------+     +---------------+     +---------------+
-|   Frontend   | --> |  Azure Function| --> | GitHub Actions| --> | PostgreSQL DB |
-|  (Streamlit) |     |  API (FastAPI) |     |   Workflow    |     |               |
+|   Frontend  | -->|   APIM & Azure   | --> | GitHub Actions| --> | PostgreSQL DB |
+|  (Streamlit)|    |Function (FastAPI)|   |   Workflow    |     |               |
 +-------------+     +-----------------+     +---------------+     +---------------+
        ^                     |                     |
        |                     v                     v
